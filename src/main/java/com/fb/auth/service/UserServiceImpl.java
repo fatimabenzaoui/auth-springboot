@@ -61,23 +61,23 @@ public class UserServiceImpl implements UserService {
 
         // vérifie si la longueur du password est incorrecte
         if (isPasswordLengthInvalid(userDTO.getPassword())) {
-            throw new InvalidLengthPasswordException();
+            throw new InvalidLengthPasswordException("*** INVALID LENGTH PASSWORD ***");
         }
 
         // vérifie si le username existe déjà en bdd
         if (Boolean.TRUE.equals(userRepository.existsByUsername(userDTO.getUsername()))) {
-            throw new UsernameAlreadyUsedException();
+            throw new UsernameAlreadyUsedException("*** USERNAME ALREADY USED ***");
         }
 
         // vérifie si l'email existe déjà en bdd
         if (Boolean.TRUE.equals(userRepository.existsByEmail(userDTO.getEmail()))) {
-            throw new EmailAlreadyUsedException();
+            throw new EmailAlreadyUsedException("*** EMAIL ALREADY USED ***");
         }
 
         // vérifie si l'email est valide
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         if (!userDTO.getEmail().matches(emailRegex)) {
-            throw new InvalidEmailException();
+            throw new InvalidEmailException("*** INVALID EMAIL ***");
         }
 
         // crypte le password
@@ -137,12 +137,12 @@ public class UserServiceImpl implements UserService {
 
         // vérifie si aucun utilisateur n'est trouvé avec la clé d'activation
         if (user == null) {
-            throw new ActivationKeyNotFoundException();
+            throw new ActivationKeyNotFoundException("*** UNKNOWN ACTIVATION KEY ***");
         }
 
         // vérifie si la clé d'activation a expiré
         if (Instant.now().isAfter(user.getExpirationKeyDate())) {
-            throw new ActivationKeyExpiredException();
+            throw new ActivationKeyExpiredException("*** ACTIVATION KEY EXPIRED ***");
         }
 
         // active le compte de l'utilisateur

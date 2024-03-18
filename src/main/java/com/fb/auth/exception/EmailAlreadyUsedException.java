@@ -1,11 +1,10 @@
 package com.fb.auth.exception;
 
-import java.io.Serial;
-
+/**
+ * Exception levée lorsqu'une tentative est faite pour utiliser une adresse e-mail qui est déjà associée à un autre compte utilisateur
+ */
 public class EmailAlreadyUsedException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = -6278656429409224449L;
-    public EmailAlreadyUsedException() {
-        super("*** EMAIL ALREADY USED ***");
+    public EmailAlreadyUsedException(String message) {
+        super(message);
     }
 }

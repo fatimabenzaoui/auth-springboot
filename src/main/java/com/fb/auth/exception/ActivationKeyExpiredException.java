@@ -1,11 +1,8 @@
 package com.fb.auth.exception;
 
-import java.io.Serial;
-
+/**
+ * Exception levée lorsqu'une tentative est faite pour activer un compte utilisateur avec une clé d'activation expirée
+ */
 public class ActivationKeyExpiredException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    public ActivationKeyExpiredException() {
-        super("*** ACTIVATION KEY EXPIRED ***");
-    }
+    public ActivationKeyExpiredException(String message) { super(message); }
 }

@@ -1,11 +1,10 @@
 package com.fb.auth.exception;
 
-import java.io.Serial;
-
+/**
+ * Exception levée lorsqu'une adresse e-mail est considérée comme invalide
+ */
 public class InvalidEmailException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    public InvalidEmailException() {
-        super("*** INVALID EMAIL ***");
+    public InvalidEmailException(String message) {
+        super(message);
     }
 }

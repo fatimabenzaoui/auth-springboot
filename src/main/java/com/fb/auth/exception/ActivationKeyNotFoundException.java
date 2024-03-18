@@ -1,11 +1,10 @@
 package com.fb.auth.exception;
 
-import java.io.Serial;
-
+/**
+ * Exception levée lorsqu'une tentative est faite pour activer un compte utilisateur avec une clé d'activation introuvable
+ */
 public class ActivationKeyNotFoundException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    public ActivationKeyNotFoundException() {
-        super("*** UNKNOWN ACTIVATION KEY ***");
+    public ActivationKeyNotFoundException(String message) {
+        super(message);
     }
 }

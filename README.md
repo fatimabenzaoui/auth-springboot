@@ -12,7 +12,7 @@ docker-compose ls
   - crypter le mot de passe
   - ajouter un rôle par défaut (rôle "CUSTOMER")
   - vérifier si la longueur du password est incorrecte
-  - vérifier si le username existe déjà en bdd
+  - vérifier si le surnom existe déjà en bdd
   - vérifier si l'email existe déjà en bdd
   - vérifier si l'email est valide
   - envoyer un email contenant la clé d'activation du compte<br>
