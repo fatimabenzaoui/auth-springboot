@@ -1,12 +1,18 @@
 package com.fb.auth.service;
 
+import com.fb.auth.constant.Constant;
 import com.fb.auth.dao.AuthorityRepository;
 import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.Authority;
 import com.fb.auth.entity.User;
+import com.fb.auth.exception.EmailAlreadyUsedException;
+import com.fb.auth.exception.InvalidEmailException;
+import com.fb.auth.exception.InvalidLengthPasswordException;
+import com.fb.auth.exception.UsernameAlreadyUsedException;
 import com.fb.auth.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +42,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createAccount(UserDTO userDTO) {
 
+        // vérifie si la longueur du password est incorrecte
+        if (isPasswordLengthInvalid(userDTO.getPassword())) {
+            throw new InvalidLengthPasswordException();
+        }
+
+        // vérifie si le username existe déjà en bdd
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(userDTO.getUsername()))) {
+            throw new UsernameAlreadyUsedException();
+        }
+
+        // vérifie si l'email existe déjà en bdd
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(userDTO.getEmail()))) {
+            throw new EmailAlreadyUsedException();
+        }
+
+        // vérifie si l'email est valide
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        if (!userDTO.getEmail().matches(emailRegex)) {
+            throw new InvalidEmailException();
+        }
+
         // crypte le password
         String cryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
         userDTO.setPassword(cryptedPassword);
@@ -61,5 +88,21 @@ public class UserServiceImpl implements UserService {
 
         // sauvegarde l'utilisateur en base de données
         userRepository.save(user);
+    }
+
+    /**
+     * Vérifie si la longueur du mot de passe est incorrecte
+     * Retourne vrai si le mot de passe est vide ou si sa longueur est inférieure à la longueur minimale
+     * spécifiée dans Constant.PASSWORD_MIN_LENGTH ou supérieure à la longueur maximale spécifiée dans Constant.PASSWORD_MAX_LENGTH
+     *
+     * @param password Le mot de passe à vérifier.
+     * @return true si la longueur du mot de passe est invalide, sinon false.
+     */
+    private static boolean isPasswordLengthInvalid(String password) {
+        return (
+                StringUtils.isEmpty(password) ||
+                password.length() < Constant.PASSWORD_MIN_LENGTH ||
+                password.length() > Constant.PASSWORD_MAX_LENGTH
+        );
     }
 }

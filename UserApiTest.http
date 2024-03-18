@@ -4,7 +4,7 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "titi",
-  "email": "titi@example.fr",
+  "username": "toto",
+  "email": "toto@example.fr",
   "password": "123456"
 }

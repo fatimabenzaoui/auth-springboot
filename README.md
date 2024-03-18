@@ -10,3 +10,7 @@ docker-compose ls
 - Créer un compte utilisateur :
   - crypter le mot de passe
   - ajouter un rôle par défaut (rôle "CUSTOMER")
+  - vérifier si la longueur du password est incorrecte
+  - vérifier si le username existe déjà en bdd
+  - vérifier si l'email existe déjà en bdd
+  - vérifier si l'email est valide
