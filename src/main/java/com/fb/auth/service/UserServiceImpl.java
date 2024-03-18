@@ -17,7 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Service
@@ -29,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final AuthorityRepository authorityRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EmailService emailService;
+    private final Random random = new Random();
 
     /**
      * Crée un nouveau compte utilisateur en utilisant les informations fournies dans un objet UserDTO
@@ -36,8 +41,14 @@ public class UserServiceImpl implements UserService {
      * Si le rôle par défaut ("CUSTOMER") n'existe pas en base de données, il est créé
      * Ce rôle est ensuite associé au nouvel utilisateur
      * L'objet UserDTO est converti en une entité User avant d'être sauvegardé en base de données
+     * Une clé d'activation est générée et associée à l'utilisateur pour activer le compte
+     * Cette clé d'activation est envoyée à l'utilisateur par email
      *
      * @param userDTO Les informations de l'utilisateur à créer
+     * @throws InvalidLengthPasswordException Si la longueur du mot de passe est invalide
+     * @throws UsernameAlreadyUsedException Si le nom d'utilisateur est déjà utilisé
+     * @throws EmailAlreadyUsedException Si l'adresse email est déjà utilisée
+     * @throws InvalidEmailException Si l'adresse email est invalide
      */
     @Override
     public void createAccount(UserDTO userDTO) {
@@ -86,8 +97,19 @@ public class UserServiceImpl implements UserService {
         // convertit l'objet DTO en entité User
         User user = userMapper.dtoToModel(userDTO);
 
+        // génère la clé d'activation
+        Instant creationDate = Instant.now();
+        Instant expirationDate = creationDate.plus(10, ChronoUnit.MINUTES);
+        int randomInteger = random.nextInt(999999);
+        String code = String.format("%06d", randomInteger);
+        user.setActivationKey(code);
+        user.setExpirationKeyDate(expirationDate);
+
         // sauvegarde l'utilisateur en base de données
         userRepository.save(user);
+
+        // envoie la clé d'activation par email
+        emailService.sendKeyActivation(user);
     }
 
     /**

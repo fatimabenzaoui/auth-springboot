@@ -14,3 +14,6 @@ docker-compose ls
   - vérifier si le username existe déjà en bdd
   - vérifier si l'email existe déjà en bdd
   - vérifier si l'email est valide
+  - envoyer un email contenant la clé d'activation du compte<br>
+   NB : Pour vérifier la réception de l'email avec la clé d'activation<br>
+   Se rendre sur http://localhost:9081/ (usage d'un serveur mail local : smtp4dev)
