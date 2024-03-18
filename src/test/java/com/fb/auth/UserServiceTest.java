@@ -15,6 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
@@ -70,5 +73,29 @@ class UserServiceTest {
         verify(userRepository, times(1)).save(user);
         // vérifie si la méthode sendKeyActivation() de l'EmailService a été appelée une fois avec l'utilisateur en paramètre
         verify(emailService, times(1)).sendKeyActivation(user);
+    }
+
+    /**
+     * Teste la méthode activateAccount() du UserServiceImpl
+     * Vérifie le comportement de l'activation du compte utilisateur
+     */
+    @Test
+    void testActivateAccount() {
+        // prépare les données de test
+        String activationKey = "990089";
+        User user = new User();
+        user.setActivationKey(activationKey);
+        user.setExpirationKeyDate(Instant.now().plusSeconds(600)); // Expiration dans 10 minutes
+
+        // configure le comportement du mock pour simuler la recherche de l'utilisateur
+        when(userRepository.findByActivationKey(activationKey)).thenReturn(user);
+
+        // appelle la méthode à tester
+        Map<String, String> activation = new HashMap<>();
+        activation.put("activationKey", activationKey);
+        userServiceImpl.activateAccount(activation);
+
+        // vérifie que la méthode save a été appelée une fois avec l'utilisateur modifié
+        verify(userRepository, times(1)).save(user);
     }
 }
