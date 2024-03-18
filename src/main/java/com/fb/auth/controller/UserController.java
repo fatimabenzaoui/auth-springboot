@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(path="user")
 @AllArgsConstructor @Slf4j
@@ -29,5 +31,16 @@ public class UserController {
     public void createAccount(@Valid @RequestBody UserDTO userDTO) {
         log.debug("*** REGISTER USER : {}", userDTO);
         userService.createAccount(userDTO);
+    }
+
+    /**
+     * Active le compte utilisateur à l'aide de la clé d'activation fournie
+     *
+     * @param activation Un objet Map contenant la clé d'activation sous la clé "activationKey"
+     */
+    @PostMapping(path="/activateAccount")
+    public void activateAccount(@RequestBody Map<String, String> activation) {
+        log.debug("*** CODE ACTIVATION SENT : {}", activation);
+        this.userService.activateAccount(activation);
     }
 }

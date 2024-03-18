@@ -6,6 +6,8 @@ import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.Authority;
 import com.fb.auth.entity.User;
+import com.fb.auth.exception.ActivationKeyExpiredException;
+import com.fb.auth.exception.ActivationKeyNotFoundException;
 import com.fb.auth.exception.EmailAlreadyUsedException;
 import com.fb.auth.exception.InvalidEmailException;
 import com.fb.auth.exception.InvalidLengthPasswordException;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -110,6 +113,44 @@ public class UserServiceImpl implements UserService {
 
         // envoie la clé d'activation par email
         emailService.sendKeyActivation(user);
+    }
+
+    /**
+     * Active le compte utilisateur en utilisant la clé d'activation fournie
+     * Recherche l'utilisateur correspondant à la clé d'activation dans la base de données
+     * Si aucun utilisateur n'est trouvé avec la clé d'activation, une exception est levée
+     * Vérifie si la clé d'activation n'a pas expiré en comparant la date d'expiration avec l'instant actuel
+     * Si la clé d'activation a expiré, une exception est levée
+     * Active le compte de l'utilisateur en définissant le champ "activated" sur true
+     * Enregistre les modifications dans la base de données
+     *
+     * @param activation Un objet Map contenant la clé d'activation sous la clé "activationKey"
+     *                   La clé d'activation est utilisée pour rechercher l'utilisateur à activer
+     * @throws ActivationKeyNotFoundException Si aucun utilisateur n'est trouvé avec la clé d'activation fournie
+     * @throws ActivationKeyExpiredException Si la clé d'activation a expiré
+     */
+    @Override
+    public void activateAccount(Map<String, String> activation) {
+        // récupère la clé d'activation fournie
+        String activationKey = activation.get("activationKey");
+
+        // recherche l'utilisateur correspondant à la clé d'activation dans la base de données
+        User user = userRepository.findByActivationKey(activationKey);
+
+        // vérifie si aucun utilisateur n'est trouvé avec la clé d'activation
+        if (user == null) {
+            throw new ActivationKeyNotFoundException();
+        }
+
+        // vérifie si la clé d'activation a expiré
+        if (Instant.now().isAfter(user.getExpirationKeyDate())) {
+            throw new ActivationKeyExpiredException();
+        }
+
+        // active le compte de l'utilisateur
+        user.setActivated(true);
+        // enregistre les modifications dans la base de données
+        userRepository.save(user);
     }
 
     /**

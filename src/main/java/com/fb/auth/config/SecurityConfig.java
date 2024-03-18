@@ -30,6 +30,7 @@ public class SecurityConfig {
                 // autorise l'accès à des routes sans authentification
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/user/createAccount").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/activateAccount").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

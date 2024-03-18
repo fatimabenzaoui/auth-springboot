@@ -4,7 +4,15 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "paul",
-  "email": "paul@example.fr",
+  "username": "jojo",
+  "email": "jojo@example.fr",
   "password": "123456"
+}
+
+### ACTIVATE AN ACCOUNT
+POST http://localhost:8080/api/user/activateAccount
+Content-Type: application/json
+
+{
+  "activationKey": "297921"
 }

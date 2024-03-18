@@ -1,6 +1,7 @@
 Création d'un compte et activation avec une clé
 
-// Lancer mariaDB, adminer et smt4dev<br>
+// Lancer les containers mariaDB, adminer et smtp4dev<br>
+cd src/main/resources
 docker-compose.yml up -d
 
 // Vérifier que les serveurs sont bien lancés<br>
@@ -17,3 +18,7 @@ docker-compose ls
   - envoyer un email contenant la clé d'activation du compte<br>
    NB : Pour vérifier la réception de l'email avec la clé d'activation<br>
    Se rendre sur http://localhost:9081/ (usage d'un serveur mail local : smtp4dev)
+
+- Activer un compte utilisateur :
+  - vérifier si aucun utilisateur n'est trouvé avec la clé d'activation
+  - vérifier si la clé d'activation n'a pas expiré
