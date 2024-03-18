@@ -22,3 +22,9 @@ docker-compose ls
 - Activer un compte utilisateur :
   - vérifier si aucun utilisateur n'est trouvé avec la clé d'activation
   - vérifier si la clé d'activation n'a pas expiré
+
+- Demander une nouvelle clé d'activation :
+  - vérifier si le surnom existe dans la base de données
+  - vérifier si le compte de l'utilisateur est déjà activé
+  - vérifier si la clé d'activation précédente est toujours valide et n'a pas expiré
+

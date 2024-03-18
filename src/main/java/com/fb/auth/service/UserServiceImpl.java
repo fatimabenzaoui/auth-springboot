@@ -6,12 +6,15 @@ import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.Authority;
 import com.fb.auth.entity.User;
+import com.fb.auth.exception.AccountAlreadyActivatedException;
 import com.fb.auth.exception.ActivationKeyExpiredException;
+import com.fb.auth.exception.ActivationKeyNotExpiredException;
 import com.fb.auth.exception.ActivationKeyNotFoundException;
 import com.fb.auth.exception.EmailAlreadyUsedException;
 import com.fb.auth.exception.InvalidEmailException;
 import com.fb.auth.exception.InvalidLengthPasswordException;
 import com.fb.auth.exception.UsernameAlreadyUsedException;
+import com.fb.auth.exception.UsernameNotFoundException;
 import com.fb.auth.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -100,13 +103,8 @@ public class UserServiceImpl implements UserService {
         // convertit l'objet DTO en entité User
         User user = userMapper.dtoToModel(userDTO);
 
-        // génère la clé d'activation
-        Instant creationDate = Instant.now();
-        Instant expirationDate = creationDate.plus(10, ChronoUnit.MINUTES);
-        int randomInteger = random.nextInt(999999);
-        String code = String.format("%06d", randomInteger);
-        user.setActivationKey(code);
-        user.setExpirationKeyDate(expirationDate);
+        // génère la clé d'activation et définit sa date d'expiration
+        generateActivationKey(user);
 
         // sauvegarde l'utilisateur en base de données
         userRepository.save(user);
@@ -154,6 +152,48 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Demande une nouvelle clé d'activation pour un utilisateur donné
+     * Si l'utilisateur est trouvé, vérifie si son compte est déjà activé et si la clé d'activation précédente a expiré
+     * Si l'utilisateur n'est pas trouvé ou si son compte est déjà activé, lance une exception appropriée
+     * Génère une nouvelle clé d'activation pour l'utilisateur et met à jour sa date d'expiration
+     * Enregistre les modifications en base de données et envoie la nouvelle clé d'activation par email
+     *
+     * @param username Le surnom de l'utilisateur pour lequel demander une nouvelle clé d'activation
+     * @throws UsernameNotFoundException Si aucun utilisateur n'est trouvé avec le surnom donné
+     * @throws AccountAlreadyActivatedException Si le compte de l'utilisateur est déjà activé
+     * @throws ActivationKeyNotExpiredException Si la clé d'activation précédente est toujours valide et n'a pas encore expiré
+     */
+    @Override
+    public void requestNewActivationKey(String username) {
+        // recherche l'utilisateur par son nom d'utilisateur
+        User user = userRepository.findByUsername(username);
+
+        // vérifie si l'utilisateur existe dans la base de données
+        if (user == null) {
+            throw new UsernameNotFoundException("*** USER NOT FOUND ***");
+        }
+
+        // vérifie si le compte de l'utilisateur est déjà activé
+        if (user.isActivated()) {
+            throw new AccountAlreadyActivatedException("*** ACCOUNT IS ALREADY ACTIVATED ***");
+        }
+
+        // vérifie si la clé d'activation précédente a expiré
+        if (Instant.now().isBefore(user.getExpirationKeyDate())) {
+            throw new ActivationKeyNotExpiredException("*** PREVIOUS ACTIVATION KEY IS STILL VALID ***");
+        }
+
+        // génère une nouvelle clé d'activation et définit sa date d'expiration
+        generateActivationKey(user);
+
+        // enregistre les modifications en base de données
+        userRepository.save(user);
+
+        // envoie la nouvelle clé d'activation par email
+        emailService.sendKeyActivation(user);
+    }
+
+    /**
      * Vérifie si la longueur du mot de passe est incorrecte
      * Retourne vrai si le mot de passe est vide ou si sa longueur est inférieure à la longueur minimale
      * spécifiée dans Constant.PASSWORD_MIN_LENGTH ou supérieure à la longueur maximale spécifiée dans Constant.PASSWORD_MAX_LENGTH
@@ -168,4 +208,21 @@ public class UserServiceImpl implements UserService {
                 password.length() > Constant.PASSWORD_MAX_LENGTH
         );
     }
+
+    /**
+     * Génère une nouvelle clé d'activation pour un utilisateur donné et définit sa date d'expiration
+     * La clé d'activation est une chaîne aléatoire de 6 chiffres
+     * La date d'expiration est définie à 10 minutes après la date de création
+     *
+     * @param user L'utilisateur pour lequel générer la clé d'activation
+     */
+    private void generateActivationKey(User user) {
+        Instant creationDate = Instant.now();
+        Instant expirationDate = creationDate.plus(10, ChronoUnit.MINUTES);
+        int randomInteger = random.nextInt(999999);
+        String key = String.format("%06d", randomInteger);
+        user.setActivationKey(key);
+        user.setExpirationKeyDate(expirationDate);
+    }
+
 }

@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/user/createAccount").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/activateAccount").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/requestNewActivationKey").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

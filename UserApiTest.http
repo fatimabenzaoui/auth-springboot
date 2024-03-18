@@ -14,5 +14,8 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "297921"
+  "activationKey": "147441"
 }
+
+### REQUEST A NEW ACTIVATION KEY
+POST http://localhost:8080/api/user/requestNewActivationKey?username=paul

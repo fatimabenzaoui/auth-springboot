@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +43,15 @@ public class UserController {
     public void activateAccount(@RequestBody Map<String, String> activation) {
         log.debug("*** CODE ACTIVATION SENT : {}", activation);
         this.userService.activateAccount(activation);
+    }
+
+    /**
+     * Demande une nouvelle clé d'activation pour un utilisateur donné
+     *
+     * @param username Le surnom de l'utilisateur pour lequel demander une nouvelle clé d'activation
+     */
+    @PostMapping("/requestNewActivationKey")
+    public void requestNewActivationKey(@RequestParam("username") String username) {
+        this.userService.requestNewActivationKey(username);
     }
 }
