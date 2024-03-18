@@ -1,7 +1,7 @@
 Création d'un compte et activation avec une clé
 
 // Lancer les containers mariaDB, adminer et smtp4dev<br>
-cd src/main/resources
+cd src/main/resources<br>
 docker-compose.yml up -d
 
 // Vérifier que les serveurs sont bien lancés<br>
