@@ -98,4 +98,29 @@ class UserServiceTest {
         // vérifie que la méthode save a été appelée une fois avec l'utilisateur modifié
         verify(userRepository, times(1)).save(user);
     }
+
+    /**
+     * Teste la méthode requestNewActivationKey() du UserServiceImpl
+     * Vérifie le comportement de la demande de nouvelle clé d'activation
+     */
+    @Test
+    void testRequestNewActivationKey() {
+        // prépare les données de test
+        String username = "testuser";
+        User user = new User();
+        user.setUsername(username);
+        user.setActivated(false);
+        user.setExpirationKeyDate(Instant.now().minusSeconds(600)); // (expiration dans 10 minutes passées)
+
+        // configure le comportement du mock pour simuler la recherche de l'utilisateur
+        when(userRepository.findByUsername(username)).thenReturn(user);
+
+        // appelle la méthode à tester
+        userServiceImpl.requestNewActivationKey(username);
+
+        // vérifie que les méthodes appropriées ont été appelées avec les bons paramètres
+        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).save(user);
+        verify(emailService, times(1)).sendKeyActivation(user);
+    }
 }
