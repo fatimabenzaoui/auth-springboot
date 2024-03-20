@@ -17,9 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -122,5 +124,29 @@ class UserServiceTest {
         verify(userRepository, times(1)).findByUsername(username);
         verify(userRepository, times(1)).save(user);
         verify(emailService, times(1)).sendKeyActivation(user);
+    }
+
+    /**
+     * Teste la méthode removeNotActivatedAccounts() du UserServiceImpl
+     * Vérifie si la méthode supprime correctement les comptes d'utilisateurs non activés.
+     */
+    @Test
+    void testRemoveNotActivatedAccounts() {
+        // prépare les données de test
+        User user1 = new User();
+        user1.setUserId(1L);
+        User user2 = new User();
+        user2.setUserId(2L);
+        List<User> userList = List.of(user1, user2);
+
+        // configure le comportement du mock pour simuler la recherche d'utilisateurs non activés
+        when(userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(any(Instant.class)))
+                .thenReturn(userList);
+
+        // appelle la méthode à tester
+        userServiceImpl.removeNotActivatedAccounts();
+
+        // vérifie que la méthode deleteAll a été appelée une fois avec la liste des utilisateurs non activés
+        verify(userRepository, times(1)).deleteAll(userList);
     }
 }

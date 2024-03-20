@@ -54,4 +54,12 @@ public class UserController {
     public void requestNewActivationKey(@RequestParam("username") String username) {
         this.userService.requestNewActivationKey(username);
     }
+
+    /**
+     * Permet de tester si la suppression des comptes utilisateurs non activés et créés au moins 3 jours auparavant fonctionne
+     */
+    @PostMapping("/removeNotActivatedAccounts")
+    public void testRemoveNotActivatedAccounts() {
+        userService.removeNotActivatedAccounts();
+    }
 }

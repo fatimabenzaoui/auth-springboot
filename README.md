@@ -18,13 +18,12 @@ docker-compose ls
   - envoyer un email contenant la clé d'activation du compte<br>
    NB : Pour vérifier la réception de l'email avec la clé d'activation<br>
    Se rendre sur http://localhost:9081/ (usage d'un serveur mail local : smtp4dev)
-
 - Activer un compte utilisateur :
   - vérifier si aucun utilisateur n'est trouvé avec la clé d'activation
   - vérifier si la clé d'activation n'a pas expiré
-
 - Demander une nouvelle clé d'activation :
   - vérifier si le surnom existe dans la base de données
   - vérifier si le compte de l'utilisateur est déjà activé
   - vérifier si la clé d'activation précédente est toujours valide et n'a pas expiré
+- Supprimer automatiquement (le 1er du mois à minuit) tous les comptes utilisateurs non activés et ayant été créés au moins 3 jours auparavant
 

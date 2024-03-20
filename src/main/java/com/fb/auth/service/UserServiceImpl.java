@@ -18,6 +18,7 @@ import com.fb.auth.exception.UsernameNotFoundException;
 import com.fb.auth.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -191,6 +192,15 @@ public class UserServiceImpl implements UserService {
 
         // envoie la nouvelle clé d'activation par email
         emailService.sendKeyActivation(user);
+    }
+
+    /**
+     * Supprime à minuit le premier jour de chaque mois (calendrier Cron) les comptes utilisateurs non activés et qui ont été créés au moins 3 jours avant
+     */
+    @Override
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void removeNotActivatedAccounts() {
+        userRepository.deleteAll(userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS)));
     }
 
     /**

@@ -8,4 +8,5 @@ public interface UserService {
     void createAccount(UserDTO userDTO);
     void activateAccount(Map<String, String> activation);
     void requestNewActivationKey(String username);
+    void removeNotActivatedAccounts();
 }
