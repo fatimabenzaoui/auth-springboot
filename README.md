@@ -28,4 +28,5 @@ docker-compose ls
 - Supprimer automatiquement (le 1er du mois à minuit) tous les comptes utilisateurs non activés et ayant été créés au moins 3 jours auparavant
 
 - Se connecter à un compte
+  - Générer un JWT
 
