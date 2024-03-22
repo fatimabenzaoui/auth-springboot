@@ -21,3 +21,12 @@ POST http://localhost:8080/api/user/requestNewActivationKey?username=paul
 
 ### REMOVE NOT ACTIVATED ACCOUNTS (ONLY FOR TEST)
 POST http://localhost:8080/api/user/removeNotActivatedAccounts
+
+### AUTHENTICATE
+POST http://localhost:8080/api/user/authenticate
+Content-Type: application/json
+
+{
+  "username": "jojo",
+  "password": "123456"
+}

@@ -27,3 +27,5 @@ docker-compose ls
   - vérifier si la clé d'activation précédente est toujours valide et n'a pas expiré
 - Supprimer automatiquement (le 1er du mois à minuit) tous les comptes utilisateurs non activés et ayant été créés au moins 3 jours auparavant
 
+- Se connecter à un compte
+

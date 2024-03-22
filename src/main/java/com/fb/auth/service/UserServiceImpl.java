@@ -19,6 +19,8 @@ import com.fb.auth.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +35,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -235,4 +237,15 @@ public class UserServiceImpl implements UserService {
         user.setExpirationKeyDate(expirationDate);
     }
 
+    /**
+     * Charge les détails de l'utilisateur à partir de la base de données en utilisant le nom d'utilisateur fourni
+     * Cette méthode est appelée par le système de sécurité pour obtenir les détails de l'utilisateur lors de l'authentification
+     * @param username Le surnom de l'utilisateur dont les détails doivent être chargés
+     * @return Les détails de l'utilisateur trouvés dans la base de données
+     * @throws UsernameNotFoundException Si aucun utilisateur avec le nom d'utilisateur donné n'est trouvé dans la base de données
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws org.springframework.security.core.userdetails.UsernameNotFoundException {
+        return this.userRepository.findByUsername(username);
+    }
 }

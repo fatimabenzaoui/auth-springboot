@@ -1,11 +1,15 @@
 package com.fb.auth.controller;
 
+import com.fb.auth.dto.AuthenticationDTO;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -21,6 +26,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Crée un nouveau compte utilisateur
@@ -61,5 +67,22 @@ public class UserController {
     @PostMapping("/removeNotActivatedAccounts")
     public void testRemoveNotActivatedAccounts() {
         userService.removeNotActivatedAccounts();
+    }
+
+    /**
+     * Authentifie l'utilisateur en utilisant l'AuthenticationManager et en créant un objet UsernamePasswordAuthenticationToken avec les informations fournies
+
+     * @param authenticationDTO Les informations d'authentification fournies par l'utilisateur
+     * @return Un objet Map contenant les informations sur l'authentification (actuellement null dans cette implémentation).
+     */
+    @PostMapping("/authenticate")
+    public Map<String, String> connexion(@RequestBody AuthenticationDTO authenticationDTO) {
+        final Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(), authenticationDTO.getPassword())
+        );
+        if(authentication.isAuthenticated()) {
+            log.info("user connected");
+        }
+        return Collections.emptyMap();
     }
 }
