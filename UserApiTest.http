@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "joe",
-  "email": "joe@example.fr",
+  "username": "jojo",
+  "email": "jojo@example.fr",
   "password": "123456"
 }
 
@@ -13,11 +13,11 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "378957"
+  "activationKey": "818997"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
-POST http://localhost:8080/api/user/requestNewActivationKey?username=paul
+POST http://localhost:8080/api/user/requestNewActivationKey?username=elie
 
 ### REMOVE NOT ACTIVATED ACCOUNTS (ONLY FOR TEST)
 POST http://localhost:8080/api/user/removeNotActivatedAccounts
@@ -30,3 +30,7 @@ Content-Type: application/json
   "username": "jojo",
   "password": "123456"
 }
+
+### FIND ALL USERS (FOR TESTING AUTHENTICATION WITH TOKEN)
+GET http://localhost:8080/api/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4MTEwNDI2LCJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb2pvIiwiZXhwIjoxNzE4MTEyMjI2fQ.54Yn0CCqGCI-psy-ts7tPUbAA2GlGS1hAqdPXiaL3wFAz1c_FmR-jdVrGJcvJytAxXoDrjjB1ccyAxeWNlJFfg

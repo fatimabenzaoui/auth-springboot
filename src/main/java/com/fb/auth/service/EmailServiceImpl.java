@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
      * @param user L'utilisateur à qui envoyer la clé d'activation
      */
     @Override
-    public void sendKeyActivation(User user) {
+    public void sendActivationKey(User user) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("no-reply@cabinetpoetique.com");
         simpleMailMessage.setTo(user.getEmail());

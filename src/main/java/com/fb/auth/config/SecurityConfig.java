@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Configuration de la sécurité de l'application (filtres de sécurité et autorisations d'accès aux différentes routes)
@@ -22,6 +24,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
 
     /**
      * Configure les filtres de sécurité (filtre de sécurité pour désactiver CSRF) et autorise l'accès à certaines routes sans authentification
@@ -47,6 +51,12 @@ public class SecurityConfig {
                         // nécessite l'authentification pour toutes les autres ressources
                         .anyRequest().authenticated()
                 )
+                // choix d'une authentification stateless (la session n'enregistrera pas le user -> front : localStorage)
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // ajoute un filtre pour valider le token de toutes les requêtes
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -56,7 +66,7 @@ public class SecurityConfig {
      * @return Un bean BCryptPasswordEncoder utilisé pour crypter les mots de passe
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public BCryptPasswordEncoder bCryptpasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -82,7 +92,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(this.bCryptPasswordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(this.bCryptpasswordEncoder());
         return daoAuthenticationProvider;
     }
 }

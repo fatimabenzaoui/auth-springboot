@@ -7,24 +7,25 @@ import com.fb.auth.entity.Authority;
 import com.fb.auth.entity.User;
 import com.fb.auth.mapper.UserMapper;
 import com.fb.auth.service.EmailService;
+import com.fb.auth.service.UserRegistrationServiceImpl;
 import com.fb.auth.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -38,6 +39,9 @@ class UserServiceTest {
     private UserMapper userMapper;
     @Mock
     private EmailService emailService;
+
+    @InjectMocks
+    private UserRegistrationServiceImpl userRegistrationServiceImpl;
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
@@ -59,7 +63,7 @@ class UserServiceTest {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword("encryptedPassword");
+        user.setPassword(userDTO.getPassword());
         user.setAuthorities(Set.of(authority));
         // configure les comportements des mocks
         when(userRepository.existsByUsername(userDTO.getUsername())).thenReturn(false);
@@ -69,12 +73,12 @@ class UserServiceTest {
         when(userMapper.dtoToModel(userDTO)).thenReturn(user);
 
         // appelle la méthode à tester
-        userServiceImpl.createAccount(userDTO);
+        userRegistrationServiceImpl.createAccount(userDTO);
 
         // vérifie si la méthode save() du UserRepository a été appelée une fois avec l'utilisateur en paramètre
         verify(userRepository, times(1)).save(user);
         // vérifie si la méthode sendKeyActivation() de l'EmailService a été appelée une fois avec l'utilisateur en paramètre
-        verify(emailService, times(1)).sendKeyActivation(user);
+        verify(emailService, times(1)).sendActivationKey(user);
     }
 
     /**
@@ -95,7 +99,7 @@ class UserServiceTest {
         // appelle la méthode à tester
         Map<String, String> activation = new HashMap<>();
         activation.put("activationKey", activationKey);
-        userServiceImpl.activateAccount(activation);
+        userRegistrationServiceImpl.activateAccount(activation);
 
         // vérifie que la méthode save a été appelée une fois avec l'utilisateur modifié
         verify(userRepository, times(1)).save(user);
@@ -118,12 +122,12 @@ class UserServiceTest {
         when(userRepository.findByUsername(username)).thenReturn(user);
 
         // appelle la méthode à tester
-        userServiceImpl.requestNewActivationKey(username);
+        userRegistrationServiceImpl.requestNewActivationKey(username);
 
         // vérifie que les méthodes appropriées ont été appelées avec les bons paramètres
         verify(userRepository, times(1)).findByUsername(username);
         verify(userRepository, times(1)).save(user);
-        verify(emailService, times(1)).sendKeyActivation(user);
+        verify(emailService, times(1)).sendActivationKey(user);
     }
 
     /**
@@ -144,9 +148,39 @@ class UserServiceTest {
                 .thenReturn(userList);
 
         // appelle la méthode à tester
-        userServiceImpl.removeNotActivatedAccounts();
+        userRegistrationServiceImpl.removeNotActivatedAccounts();
 
         // vérifie que la méthode deleteAll a été appelée une fois avec la liste des utilisateurs non activés
         verify(userRepository, times(1)).deleteAll(userList);
+    }
+
+    /**
+     * Teste la méthode findAll() du service UserServiceImpl
+     * Vérifie si la méthode retourne correctement tous les utilisateurs de la base de données, triés par userId décroissant
+     */
+    @Test
+    void testFindAll() {
+        // crée des données fictives pour simuler le comportement du repository
+        List<User> users = new ArrayList<>();
+        users.add(createUser("user1", "user1@example.com", "123456"));
+        users.add(createUser("user2", "user2@example.com", "789789"));
+
+        // définit le comportement du mock userRepository
+        when(userRepository.findAll(Sort.by(Sort.Direction.DESC, "userId"))).thenReturn(users);
+
+        // appelle la méthode à tester
+        userServiceImpl.findAll();
+
+        // vérifie le résultat en utilisant Mockito
+        verify(userRepository, times(1)).findAll(Sort.by(Sort.Direction.DESC, "userId"));
+    }
+
+    // méthode utilitaire pour créer un UserDTO avec les propriétés spécifiées
+    private User createUser(String username, String email, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        return user;
     }
 }

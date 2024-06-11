@@ -1,0 +1,44 @@
+@startuml shopclassdiagram
+
+User "*" -right- "*" Authority
+
+abstract class Audit {
+    - createdBy: String
+    - createdDate: Instant
+    - lastModifiedBy: String
+    - lastModifiedDate: Instant
+}
+
+interface UserDetails {
+    + getAuthorities(): Collection <? extends GrantedAuthority>
+    + getPassword(): String
+    + getUsername(): String
+    + isAccountNonExpired(): boolean
+    + isAccountNonLocked(): boolean
+    + isCredentialsNonExpired(): boolean
+    + isEnabled(): boolean
+}
+
+class User extends Audit
+class User implements UserDetails
+class User {
+    - userId: Long
+    - password: String
+    - username: String  
+    - email: String
+    - activated: boolean
+    - activationKey: String
+    - expirationKeyDate: Instant
+    - authorities: Set<Authority>
+
+    + createAccount(UserDTO userDTO): void
+    + activateAccount(Map<String, String> activation): void
+    + requestNewActivationKey(String username): void
+    + removeNotActivatedAccounts(): void
+}
+
+class Authority {
+    - authorityLabel: String
+}
+
+@enduml

@@ -3,6 +3,7 @@ package com.fb.auth.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,9 +22,7 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,7 +34,7 @@ import java.util.Set;
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false)
 @Table(name="users")
-public class User extends Audit implements UserDetails, Serializable {
+public class User extends Audit implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = -7265724107958157470L;
@@ -71,7 +70,7 @@ public class User extends Audit implements UserDetails, Serializable {
     private Instant expirationKeyDate;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_authorities",
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },

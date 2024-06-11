@@ -6,7 +6,7 @@ import lombok.Data;
  * DTO qui permet de s'authentifier
  */
 @Data
-public class AuthenticationDTO {
+public class UserAuthenticationDTO {
     private String username;
     private String password;
 }

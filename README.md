@@ -2,7 +2,7 @@ Création d'un compte et activation avec une clé
 
 // Lancer les containers mariaDB, adminer et smtp4dev<br>
 cd src/main/resources<br>
-docker-compose.yml up -d
+docker-compose up -d
 
 // Vérifier que les serveurs sont bien lancés<br>
 docker-compose ls
@@ -26,7 +26,7 @@ docker-compose ls
   - vérifier si le compte de l'utilisateur est déjà activé
   - vérifier si la clé d'activation précédente est toujours valide et n'a pas expiré
 - Supprimer automatiquement (le 1er du mois à minuit) tous les comptes utilisateurs non activés et ayant été créés au moins 3 jours auparavant
-
 - Se connecter à un compte
-  - Générer un JWT
+  - générer un JWT
+- Afficher la liste des utilisateurs
 

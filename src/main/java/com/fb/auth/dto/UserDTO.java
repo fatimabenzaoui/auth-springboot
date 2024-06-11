@@ -1,8 +1,8 @@
 package com.fb.auth.dto;
 
-import com.fb.auth.entity.Authority;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Set;
 
 /**
@@ -14,7 +14,14 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private Set<Authority> authorities;
+    private Set<String> authorities;
+    
     private boolean activated = false;
     private String activationKey;
+    private Instant expirationKeyDate;
+
+    private String createdBy;
+    private Instant createdDate;
+    private String lastModifiedBy;
+    private Instant lastModifiedDate;
 }
