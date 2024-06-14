@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "jojo",
-  "email": "jojo@example.fr",
+  "username": "jules",
+  "email": "JULES@EXAMPLE.FR",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "818997"
+  "activationKey": "969801"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
@@ -22,7 +22,7 @@ POST http://localhost:8080/api/user/requestNewActivationKey?username=elie
 ### REMOVE NOT ACTIVATED ACCOUNTS (ONLY FOR TEST)
 POST http://localhost:8080/api/user/removeNotActivatedAccounts
 
-### AUTHENTICATE
+### AUTHENTICATE AS CUSTOMER
 POST http://localhost:8080/api/user/authenticate
 Content-Type: application/json
 
@@ -31,6 +31,32 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### FIND ALL USERS (FOR TESTING AUTHENTICATION WITH TOKEN)
+### AUTHENTICATE AS ADMIN
+POST http://localhost:8080/api/user/authenticate
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin@pass123"
+}
+
+### AUTHENTICATE AS EDITOR
+POST http://localhost:8080/api/user/authenticate
+Content-Type: application/json
+
+{
+  "username": "editor",
+  "password": "editor@pass123"
+}
+
+### FIND ALL USERS AS CUSTOMER
 GET http://localhost:8080/api/user
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4MTEwNDI2LCJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb2pvIiwiZXhwIjoxNzE4MTEyMjI2fQ.54Yn0CCqGCI-psy-ts7tPUbAA2GlGS1hAqdPXiaL3wFAz1c_FmR-jdVrGJcvJytAxXoDrjjB1ccyAxeWNlJFfg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb2pvIiwiZXhwIjoxNzE4MzYzMDY2LCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4MzYxMjY2fQ.hKDFIy3UYBXUlRvomENITe0XlgDjipfADVXXnL3MtUcmDBaN0YkdijsczP503tfBGbOXNkHmSlVYgdzdE-6BIA
+
+### FIND ALL USERS AS ADMIN
+GET http://localhost:8080/api/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTgzNjAzODUsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxODM2MjE4NSwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.uDZAg2ssxa4ORLr624Ta1TnQXKPYUFv4XAezb_h0LlHeVdcuW56Nhis_aQuaqejl2bMdqgI89FYWWQzuviJbpQ
+
+### FIND ALL USERS AS EDITOR
+GET http://localhost:8080/api/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImVkaXRvciIsInN1YiI6ImVkaXRvciIsImV4cCI6MTcxODM2MzU2OCwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dLCJpYXQiOjE3MTgzNjE3Njh9.BZwymyJTwZwIDgMMMXwrPmLXuMtBtk3DtUoEMGXYMsqyLS2wRZQh0MEm_8LSL6c34_oSI3_3B_QhBScDG3gAkw
