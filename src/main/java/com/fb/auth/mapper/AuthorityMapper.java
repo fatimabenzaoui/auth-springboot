@@ -31,7 +31,7 @@ public interface AuthorityMapper {
      * @return Un ensemble de chaînes de caractères représentant les autorités mais i la collection d'entrée est null, un ensemble vide est retourné
      */
     @Named("grantedAuthoritiesCollectionToStringSet")
-    default Set<String> authoritiesToStringSet(Collection<? extends GrantedAuthority> authorities) {
+    default Set<String> grantedAuthoritiesCollectionToStringSet(Collection<? extends GrantedAuthority> authorities) {
         // vérifie si la collection d'authorities est null et retourne un ensemble vide si c'est le cas
         if (authorities == null) {
             return Collections.emptySet();
@@ -49,7 +49,7 @@ public interface AuthorityMapper {
      * @return Un ensemble d'objets Authority mais si l'ensemble d'entrée est null, un ensemble vide est retourné
      */
     @Named("stringSetToAuthoritiesSet")
-    default Set<Authority> stringSetToAuthorities(Set<String> strings) {
+    default Set<Authority> stringSetToAuthoritiesSet(Set<String> strings) {
         // vérifie si l'ensemble de chaînes de caractères est null et retourne un ensemble vide si c'est le cas
         if (strings == null) {
             return Collections.emptySet();

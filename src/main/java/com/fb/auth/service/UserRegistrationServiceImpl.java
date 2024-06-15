@@ -108,6 +108,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         // sauvegarde l'utilisateur en base de données
         userRepository.save(user);
 
+        // envoie un email de bienvenue
+        emailService.sendWelcomeEmail(user);
+
         // envoie la clé d'activation par email
         emailService.sendActivationKey(user);
     }

@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "jules",
-  "email": "JULES@EXAMPLE.FR",
+  "username": "etienne",
+  "email": "etienne@etienne.fr",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "969801"
+  "activationKey": "794990"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
