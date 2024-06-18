@@ -3,7 +3,9 @@ package com.fb.auth.service;
 import com.fb.auth.config.JwtGenerator;
 import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserAuthenticationDTO;
+import com.fb.auth.dto.UserDetailsUpdateDTO;
 import com.fb.auth.entity.User;
+import com.fb.auth.exception.InvalidEmailException;
 import com.fb.auth.exception.InvalidPasswordResetKeyException;
 import com.fb.auth.exception.PasswordMismatchException;
 import com.fb.auth.exception.UsernameNotFoundException;
@@ -136,6 +138,34 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
         // sauvegarde le nouveau mot de passe
         currentUser.setPassword(encodedNewPassword);
+        userRepository.save(currentUser);
+    }
+
+    /**
+     * Met à jour les informations personnelles de l'utilisateur actuellement connecté
+     *
+     * @param userDetailsUpdateDTO l'objet contenant les nouvelles informations de l'utilisateur
+     * @throws UsernameNotFoundException si l'utilisateur connecté n'existe pas dans la base de données
+     * @throws InvalidEmailException Si l'adresse email est invalide
+     */
+    @Override
+    public void updateUserDetails(UserDetailsUpdateDTO userDetailsUpdateDTO) {
+        // récupère l'utilisateur connecté à partir du contexte de sécurité actuel
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(username);
+        // vérifie si l'utilisateur connecté existe bien dans la base de données
+        if (currentUser == null) {
+            throw new UsernameNotFoundException("*** CURRENT USER NOT FOUND");
+        }
+        // vérifie si l'email est valide
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        if (!userDetailsUpdateDTO.getEmail().matches(emailRegex)) {
+            throw new InvalidEmailException("*** INVALID EMAIL ***");
+        }
+        // met à jour les informations personnelles de l'utilisateur
+        currentUser.setUsername(userDetailsUpdateDTO.getUsername());
+        currentUser.setEmail(userDetailsUpdateDTO.getEmail());
+        // sauvegarde les modifications
         userRepository.save(currentUser);
     }
 

@@ -83,4 +83,12 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg3MDc5NjUsInVzZXJuYW1lI
   "newPassword": "newPassword123v2"
 }
 
-###
+### UPDATE USER DETAILS (USER CONNECTED)
+PUT http://localhost:8080/api/user/updateUserDetails
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3MjEyNDUsInN1YiI6InRpdGkiLCJ1c2VybmFtZSI6InRpdGkiLCJpYXQiOjE3MTg3MTk0NDUsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.O7bqdeZX95-yZPvIjZNTAqA7FlItgXH79zxrvPd2L0wQhS-AsKuSx6wpJ8yF_GXz6youEhXjcpdAisRhDxwWeg
+
+{
+  "username": "toto",
+  "email": "toto@toto.fr"
+}

@@ -2,9 +2,11 @@ package com.fb.auth.controller;
 
 import com.fb.auth.constant.AuthoritiesConstants;
 import com.fb.auth.dto.UserAuthenticationDTO;
+import com.fb.auth.dto.UserDetailsUpdateDTO;
 import com.fb.auth.dto.UserPasswordResetDTO;
 import com.fb.auth.dto.UserPasswordUpdateDTO;
 import com.fb.auth.service.UserAuthenticationService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -79,5 +81,18 @@ public class UserAuthenticationController {
     public ResponseEntity<String> updatePassword(@RequestBody UserPasswordUpdateDTO userPasswordUpdateDTO) {
         userAuthenticationService.updatePassword(userPasswordUpdateDTO.getCurrentPassword(), userPasswordUpdateDTO.getNewPassword());
         return ResponseEntity.ok("Password updated successfully.");
+    }
+
+    /**
+     * Met à jour les informations personnelles de l'utilisateur actuellement connecté
+     *
+     * @param userDetailsUpdateDTO l'objet contenant le surnom de l'utilisateur et son email
+     * @return une réponse HTTP indiquant que les informations personnelles de l'utilisateur ont été mis à jour avec succès
+     */
+    @PutMapping("/updateUserDetails")
+    @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.EDITOR + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<String> updateUserDetails(@Valid @RequestBody UserDetailsUpdateDTO userDetailsUpdateDTO) {
+        userAuthenticationService.updateUserDetails(userDetailsUpdateDTO);
+        return ResponseEntity.ok("User Details updated successfully.");
     }
 }

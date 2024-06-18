@@ -47,6 +47,7 @@ class User {
     + forgotPassword(String email): void
     + resetPassword(String passwordResetKey, UserPasswordResetDTO userPasswordResetDTO): void
     + updatePassword(UserPasswordUpdateDTO userPasswordUpdateDTO): void
+    + updateUserDetails(UserDetailsUpdateDTO userDetailsUpdateDTO): void
 
     + findAll(): List<UserDTO>
 }
