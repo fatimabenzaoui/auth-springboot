@@ -202,7 +202,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     /**
-     * Supprime à minuit le premier jour de chaque mois (calendrier Cron) les comptes utilisateurs non activés et qui ont été créés au moins 3 jours avant
+     * Supprime quotidiennement à 1h00 du matin les comptes utilisateurs non activés qui ont été créés au moins 3 jours auparavant
+     * Utilisation du calendrier Cron pour planifier l'exécution
      */
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
