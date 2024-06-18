@@ -123,20 +123,20 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     public void updatePassword(String currentPassword, String newPassword) {
         // récupère l'utilisateur connecté à partir du contexte de sécurité actuel
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username);
+        User currentUser = userRepository.findByUsername(username);
         // vérifie si l'utilisateur connecté existe bien dans la base de données
-        if (user == null) {
-            throw new UsernameNotFoundException("*** USER NOT FOUND");
+        if (currentUser == null) {
+            throw new UsernameNotFoundException("*** CURRENT USER NOT FOUND");
         }
         // vérifie si l'ancien mot de passe est correct
-        if (!bCryptPasswordEncoder.matches(currentPassword, user.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(currentPassword, currentUser.getPassword())) {
             throw new PasswordMismatchException("*** CURRENT PASSWORD IS INCORRECT");
         }
         // crypte le nouveau mot de passe
         String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
         // sauvegarde le nouveau mot de passe
-        user.setPassword(encodedNewPassword);
-        userRepository.save(user);
+        currentUser.setPassword(encodedNewPassword);
+        userRepository.save(currentUser);
     }
 
 }
