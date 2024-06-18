@@ -1,15 +1,25 @@
 package com.fb.auth.service;
 
 import com.fb.auth.config.JwtGenerator;
+import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserAuthenticationDTO;
+import com.fb.auth.entity.User;
+import com.fb.auth.exception.InvalidPasswordResetKeyException;
+import com.fb.auth.exception.PasswordMismatchException;
+import com.fb.auth.exception.UsernameNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +28,8 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
 
     /**
      * Authentifie un utilisateur en utilisant les informations d'authentification fournies et génère un JWT si l'authentification est réussie
@@ -40,6 +52,61 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         }
         // si l'authentification échoue, retourne une carte vide
         return Collections.emptyMap();
+    }
+
+    /**
+     * Génère une clé de réinitialisation du mot de passe et envoie un email à l'utilisateur pour réinitialiser son mot de passe
+     *
+     * @param email L'email de l'utilisateur demandant la réinitialisation du mot de passe
+     * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé avec l'email donné
+     */
+    @Override
+    public void forgotPassword(String email) {
+        // recherche l'utilisateur avec son email
+        User user = userRepository.findByEmail(email);
+        // si aucun utilisateur n'est trouvé, lance une exception UsernameNotFoundException
+        if (user == null) {
+            throw new UsernameNotFoundException("*** NO USER FOUND WITH EMAIL : " + email);
+        }
+        // génère une clé de réinitialisation de mot de passe unique
+        String passwordResetKey = UUID.randomUUID().toString();
+        // assigne la clé de réinitialisation à l'utilisateur et fixe une date d'expiration pour la clé (24 heures)
+        user.setPasswordResetKey(passwordResetKey);
+        user.setPasswordResetKeyExpiration(Instant.now().plus(24, ChronoUnit.HOURS));
+        // sauvegarde les modifications de l'utilisateur dans le dépôt
+        userRepository.save(user);
+        // envoie un email à l'utilisateur avec un lien pour réinitialiser son mot de passe
+        this.emailService.sendPasswordResetEmail(user);
+    }
+
+    /**
+     * Réinitialise le mot de passe de l'utilisateur si la clé de réinitialisation est valide et si les mots de passe fournis correspondent
+     *
+     * @param passwordResetKey La clé de réinitialisation du mot de passe envoyée à l'utilisateur
+     * @param newPassword Le nouveau mot de passe choisi par l'utilisateur
+     * @param confirmPassword La confirmation du nouveau mot de passe
+     * @throws InvalidPasswordResetKeyException si la clé de réinitialisation est invalide ou expirée
+     * @throws PasswordMismatchException si les mots de passe fournis ne correspondent pas
+     */
+    @Override
+    public void resetPassword(String passwordResetKey, String newPassword, String confirmPassword) {
+        // recherche l'utilisateur avec la clé de réinitialisation du mot de passe
+        User user = userRepository.findByPasswordResetKey(passwordResetKey);
+        // vérifie si l'utilisateur existe et si la clé de réinitialisation n'est pas expirée
+        if (user == null || user.getPasswordResetKeyExpiration().isBefore(Instant.now())) {
+            throw new InvalidPasswordResetKeyException("*** INVALID OR EXPIRED PASSWORD RESET KEY");
+        }
+        // vérifie si les nouveaux mots de passe fournis correspondent
+        if (!newPassword.equals(confirmPassword)) {
+            throw new PasswordMismatchException("*** PASSWORDS DO NOT MATCH");
+        }
+        // encode le nouveau mot de passe et l'assigne à l'utilisateur
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        // supprime la clé de réinitialisation du mot de passe et sa date d'expiration après utilisation
+        user.setPasswordResetKey(null);
+        user.setPasswordResetKeyExpiration(null);
+        // sauvegarde les modifications de l'utilisateur dans la base de données
+        userRepository.save(user);
     }
 
 }

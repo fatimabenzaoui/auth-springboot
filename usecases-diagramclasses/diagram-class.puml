@@ -27,9 +27,10 @@ class User {
     - username: String  
     - email: String
     - activated: boolean
-    - activationKey: String
-    - expirationKeyDate: Instant
     - authorities: Set<Authority>
+
+    - activationKey: String
+    - activationKeyExpiration: Instant
 
     + createAccount(UserDTO userDTO): void
     + activateAccount(Map<String, String> activation): void

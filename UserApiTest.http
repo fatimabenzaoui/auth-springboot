@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "etienne",
-  "email": "etienne@etienne.fr",
+  "username": "jean",
+  "email": "jean@jean.fr",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "794990"
+  "activationKey": "985793"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
@@ -27,8 +27,8 @@ POST http://localhost:8080/api/user/authenticate
 Content-Type: application/json
 
 {
-  "username": "jojo",
-  "password": "123456"
+  "username": "jean",
+  "password": "newPassword123"
 }
 
 ### AUTHENTICATE AS ADMIN
@@ -55,8 +55,22 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb
 
 ### FIND ALL USERS AS ADMIN
 GET http://localhost:8080/api/user
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTgzNjAzODUsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxODM2MjE4NSwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.uDZAg2ssxa4ORLr624Ta1TnQXKPYUFv4XAezb_h0LlHeVdcuW56Nhis_aQuaqejl2bMdqgI89FYWWQzuviJbpQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg2MjUyNjYsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxODYyNzA2NiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.WIH1Rk1IASX8MeFrwHctxri0feKuYmGyB4IJ02wlPFhzEV6z6X02pzvm9v0ezBiXlL6VggDSTG71oHftJhvFug
 
 ### FIND ALL USERS AS EDITOR
 GET http://localhost:8080/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImVkaXRvciIsInN1YiI6ImVkaXRvciIsImV4cCI6MTcxODM2MzU2OCwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dLCJpYXQiOjE3MTgzNjE3Njh9.BZwymyJTwZwIDgMMMXwrPmLXuMtBtk3DtUoEMGXYMsqyLS2wRZQh0MEm_8LSL6c34_oSI3_3B_QhBScDG3gAkw
+
+### FORGOT PASSWORD
+POST http://localhost:8080/api/user/forgotPassword?email=jean@jean.fr
+
+### RESET PASSWORD
+POST http://localhost:8080/api/user/resetPassword?key=2ab28d74-60db-430a-ba3b-dcebfe507cac
+Content-Type: application/json
+
+{
+  "newPassword": "newPassword123",
+  "confirmPassword": "newPassword123"
+}
+
+###

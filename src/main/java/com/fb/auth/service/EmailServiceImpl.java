@@ -68,4 +68,18 @@ public class EmailServiceImpl implements EmailService {
         String subject = "Activation de votre compte";
         this.sendEmail(user.getEmail(), subject, content, true);
     }
+
+    /**
+     * Envoie par email le lien pour réinitialiser son mot de passe à l'utilisateur spécifié
+     *
+     * @param user L'utilisateur à qui envoyer le lien pour réinitialiser son mot de passe
+     */
+    @Override
+    public void sendPasswordResetEmail(User user) {
+        Context context = new Context();
+        context.setVariable(USER, user);
+        String content = templateEngine.process("email/passwordResetEmail", context);
+        String subject = "Réinitialisation du mot de passe";
+        this.sendEmail(user.getEmail(), subject, content, true);
+    }
 }

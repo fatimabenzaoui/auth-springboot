@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
     List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
 
+    User findByEmail(String email);
+    User findByPasswordResetKey(String passwordResetKey);
 }

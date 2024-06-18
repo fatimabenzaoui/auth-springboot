@@ -27,9 +27,13 @@ class User {
     - username: String  
     - email: String
     - activated: boolean
-    - activationKey: String
-    - expirationKeyDate: Instant
     - authorities: Set<Authority>
+
+    - activationKey: String
+    - activationKeyExpiration: Instant
+
+    - passwordResetKey: String
+    - passwordResetKeyExpiration: Instant
 
     + createAccount(UserDTO userDTO): void
     + activateAccount(Map<String, String> activation): void
@@ -38,6 +42,11 @@ class User {
 
     + loadUserByUsername(String username): User
     + authenticate(UserAuthenticationDTO userAuthenticationDTO): Map<String, String>
+    + doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain): void
+
+    + forgotPassword(String email): void
+    + resetPassword(String passwordResetKey, UserPasswordResetDTO userPasswordResetDTO): void
+    + updatePassword(UserPasswordUpdateDTO userPasswordUpdateDTO): void
 
     + findAll(): List<UserDTO>
 }

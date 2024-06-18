@@ -67,8 +67,13 @@ public class User extends Audit implements UserDetails {
     @Column(length = 20)
     @JsonIgnore
     private String activationKey;
+    private Instant activationKeyExpiration;
 
-    private Instant expirationKeyDate;
+    @Size(max = 36)
+    @Column(length = 36)
+    @JsonIgnore
+    private String passwordResetKey;
+    private Instant passwordResetKeyExpiration;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)

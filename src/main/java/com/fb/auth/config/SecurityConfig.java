@@ -49,6 +49,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user/requestNewActivationKey").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/removeNotActivatedAccounts").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/authenticate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/forgotPassword").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/resetPassword").permitAll()
 
                         // nécessite l'authentification pour toutes les autres ressources
                         .anyRequest().authenticated()

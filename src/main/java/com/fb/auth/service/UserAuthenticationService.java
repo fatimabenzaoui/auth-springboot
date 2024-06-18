@@ -5,4 +5,6 @@ import java.util.Map;
 
 public interface UserAuthenticationService {
     Map<String, String> authenticate(UserAuthenticationDTO userAuthenticationDTO);
+    void forgotPassword(String email);
+    void resetPassword(String passwordResetKey, String newPassword, String confirmPassword);
 }

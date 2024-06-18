@@ -144,12 +144,17 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         }
 
         // vérifie si la clé d'activation a expiré
-        if (Instant.now().isAfter(user.getExpirationKeyDate())) {
+        if (Instant.now().isAfter(user.getActivationKeyExpiration())) {
             throw new ActivationKeyExpiredException("*** ACTIVATION KEY EXPIRED ***");
         }
 
         // active le compte de l'utilisateur
         user.setActivated(true);
+
+        // supprime la clé d'activation et sa date d'expiration
+        user.setActivationKey(null);
+        user.setActivationKeyExpiration(null);
+
         // enregistre les modifications dans la base de données
         userRepository.save(user);
     }
@@ -182,7 +187,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         }
 
         // vérifie si la clé d'activation précédente a expiré
-        if (Instant.now().isBefore(user.getExpirationKeyDate())) {
+        if (Instant.now().isBefore(user.getActivationKeyExpiration())) {
             throw new ActivationKeyNotExpiredException("*** PREVIOUS ACTIVATION KEY IS STILL VALID ***");
         }
 
@@ -222,18 +227,17 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     /**
-     * Génère une nouvelle clé d'activation pour un utilisateur donné et définit sa date d'expiration
+     * Génère une clé d'activation pour un utilisateur donné et définit sa date d'expiration
      * La clé d'activation est une chaîne aléatoire de 6 chiffres
      * La date d'expiration est définie à 10 minutes après la date de création
      *
      * @param user L'utilisateur pour lequel générer la clé d'activation
      */
     private void generateActivationKey(User user) {
-        Instant creationDate = Instant.now();
-        Instant expirationDate = creationDate.plus(10, ChronoUnit.MINUTES);
+        Instant activationKeyExpiration = Instant.now().plus(10, ChronoUnit.MINUTES);
         int randomInteger = random.nextInt(999999);
         String key = String.format("%06d", randomInteger);
         user.setActivationKey(key);
-        user.setExpirationKeyDate(expirationDate);
+        user.setActivationKeyExpiration(activationKeyExpiration);
     }
 }
