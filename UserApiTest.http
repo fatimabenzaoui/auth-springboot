@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "jean",
-  "email": "jean@jean.fr",
+  "username": "titi",
+  "email": "titi@titi.fr",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "985793"
+  "activationKey": "884612"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
@@ -27,7 +27,7 @@ POST http://localhost:8080/api/user/authenticate
 Content-Type: application/json
 
 {
-  "username": "jean",
+  "username": "titi",
   "password": "newPassword123"
 }
 
@@ -55,7 +55,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb
 
 ### FIND ALL USERS AS ADMIN
 GET http://localhost:8080/api/user
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg2MjUyNjYsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxODYyNzA2NiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.WIH1Rk1IASX8MeFrwHctxri0feKuYmGyB4IJ02wlPFhzEV6z6X02pzvm9v0ezBiXlL6VggDSTG71oHftJhvFug
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3MDcyNzIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0VESVRPUiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4NzA1NDcyLCJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4ifQ.492NTkYsN0kEbXFzdRZyvV9Cp4rnTD9vlBoDFgDb-dsyzgSdfG6bowcGgcVLEWul_f0SgjC3GMDlGX-kabESbw
 
 ### FIND ALL USERS AS EDITOR
 GET http://localhost:8080/api/user
@@ -71,6 +71,16 @@ Content-Type: application/json
 {
   "newPassword": "newPassword123",
   "confirmPassword": "newPassword123"
+}
+
+### UPDATE PASSWORD (USER CONNECTED)
+PUT http://localhost:8080/api/user/updatePassword
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg3MDc5NjUsInVzZXJuYW1lIjoiZWRpdG9yIiwic3ViIjoiZWRpdG9yIiwiZXhwIjoxNzE4NzA5NzY1LCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9FRElUT1IifSx7ImF1dGhvcml0eSI6IlJPTEVfQ1VTVE9NRVIifV19.Jxpd6rCMs1PysMBZUHqL5dkBLVGT3NwY43nECksTcooeLi2ZxyeJyBwBw1Kj8ICrTV-TN8nGYNePVHEw40KfYg
+
+{
+  "currentPassword": "editor@pass123",
+  "newPassword": "newPassword123v2"
 }
 
 ###

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Authentifie un utilisateur en utilisant les informations d'authentification fournies et génère un JWT si l'authentification est réussie
@@ -106,6 +108,34 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         user.setPasswordResetKey(null);
         user.setPasswordResetKeyExpiration(null);
         // sauvegarde les modifications de l'utilisateur dans la base de données
+        userRepository.save(user);
+    }
+
+    /**
+     * Met à jour le mot de passe de l'utilisateur actuellement connecté
+     *
+     * @param currentPassword le mot de passe actuel de l'utilisateur
+     * @param newPassword le nouveau mot de passe que l'utilisateur souhaite définir
+     * @throws UsernameNotFoundException si l'utilisateur n'est pas trouvé dans la base de données
+     * @throws PasswordMismatchException si le mot de passe actuel est incorrect
+     */
+    @Override
+    public void updatePassword(String currentPassword, String newPassword) {
+        // récupère l'utilisateur connecté à partir du contexte de sécurité actuel
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+        // vérifie si l'utilisateur connecté existe bien dans la base de données
+        if (user == null) {
+            throw new UsernameNotFoundException("*** USER NOT FOUND");
+        }
+        // vérifie si l'ancien mot de passe est correct
+        if (!bCryptPasswordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new PasswordMismatchException("*** CURRENT PASSWORD IS INCORRECT");
+        }
+        // crypte le nouveau mot de passe
+        String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+        // sauvegarde le nouveau mot de passe
+        user.setPassword(encodedNewPassword);
         userRepository.save(user);
     }
 

@@ -1,13 +1,17 @@
 package com.fb.auth.controller;
 
+import com.fb.auth.constant.AuthoritiesConstants;
 import com.fb.auth.dto.UserAuthenticationDTO;
 import com.fb.auth.dto.UserPasswordResetDTO;
+import com.fb.auth.dto.UserPasswordUpdateDTO;
 import com.fb.auth.service.UserAuthenticationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,5 +66,18 @@ public class UserAuthenticationController {
     public ResponseEntity<String> resetPassword(@RequestParam("key") String passwordResetKey, @RequestBody UserPasswordResetDTO userPasswordResetDTO) {
         userAuthenticationService.resetPassword(passwordResetKey, userPasswordResetDTO.getNewPassword(), userPasswordResetDTO.getConfirmPassword());
         return ResponseEntity.ok("Password successfully reset.");
+    }
+
+    /**
+     * Met à jour le mot de passe de l'utilisateur actuellement connecté
+     *
+     * @param userPasswordUpdateDTO l'objet contenant le mot de passe actuel et le nouveau mot de passe
+     * @return une réponse HTTP indiquant que le mot de passe a été modifié avec succès
+     */
+    @PutMapping("/updatePassword")
+    @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.EDITOR + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<String> updatePassword(@RequestBody UserPasswordUpdateDTO userPasswordUpdateDTO) {
+        userAuthenticationService.updatePassword(userPasswordUpdateDTO.getCurrentPassword(), userPasswordUpdateDTO.getNewPassword());
+        return ResponseEntity.ok("Password updated successfully.");
     }
 }
