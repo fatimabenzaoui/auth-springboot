@@ -1,6 +1,7 @@
 @startuml shopclassdiagram
 
-User "*" -right- "*" Authority
+User "*" -right-> "*" Authority
+User "1" <-down- "1" AccountActivation
 
 abstract class Audit {
     - createdBy: String
@@ -29,9 +30,6 @@ class User {
     - activated: boolean
     - authorities: Set<Authority>
 
-    - activationKey: String
-    - activationKeyExpiration: Instant
-
     - passwordResetKey: String
     - passwordResetKeyExpiration: Instant
 
@@ -54,6 +52,12 @@ class User {
 
 class Authority {
     - authorityLabel: String
+}
+
+class AccountActivation {
+    - activationKey: String
+    - expirationDate: Instant
+    - user: User
 }
 
 @enduml
