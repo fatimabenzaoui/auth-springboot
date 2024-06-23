@@ -2,6 +2,7 @@
 
 User "*" -right-> "*" Authority
 User "1" <-down- "1" AccountActivation
+User "1" <-down- "1" ResetPassword
 
 abstract class Audit {
     - createdBy: String
@@ -25,13 +26,10 @@ class User implements UserDetails
 class User {
     - userId: Long
     - password: String
-    - username: String  
+    - username: String
     - email: String
     - activated: boolean
     - authorities: Set<Authority>
-
-    - passwordResetKey: String
-    - passwordResetKeyExpiration: Instant
 
     + createAccount(UserDTO userDTO): void
     + activateAccount(Map<String, String> activation): void
@@ -55,7 +53,15 @@ class Authority {
 }
 
 class AccountActivation {
+    - accountActivationId: Long
     - activationKey: String
+    - expirationDate: Instant
+    - user: User
+}
+
+class ResetPassword {
+    - resetPasswordId: Long
+    - resetKey: String
     - expirationDate: Instant
     - user: User
 }

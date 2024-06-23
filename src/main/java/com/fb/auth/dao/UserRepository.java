@@ -26,7 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
         AND a.expirationDate < :date
     """)
     List<User> findAllNotActivatedUsersWithActivationKey(@Param("date") Instant date);
-
     User findByEmail(String email);
-    User findByPasswordResetKey(String passwordResetKey);
 }

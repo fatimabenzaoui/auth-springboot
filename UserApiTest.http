@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "paul",
-  "email": "paul@paul.fr",
+  "username": "titi",
+  "email": "titi@titi.fr",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "168801"
+  "activationKey": "042505"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
@@ -27,7 +27,7 @@ POST http://localhost:8080/api/user/authenticate
 Content-Type: application/json
 
 {
-  "username": "titi",
+  "username": "paul",
   "password": "newPassword123"
 }
 
@@ -46,12 +46,12 @@ Content-Type: application/json
 
 {
   "username": "editor",
-  "password": "editor@pass123"
+  "password": "newPassword123"
 }
 
 ### FIND ALL USERS AS CUSTOMER
 GET http://localhost:8080/api/user
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Impvam8iLCJzdWIiOiJqb2pvIiwiZXhwIjoxNzE4MzYzMDY2LCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4MzYxMjY2fQ.hKDFIy3UYBXUlRvomENITe0XlgDjipfADVXXnL3MtUcmDBaN0YkdijsczP503tfBGbOXNkHmSlVYgdzdE-6BIA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTkxNzUzNTQsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxOTE3NzE1NCwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.XV4eQ-LtRvkdJy70sNlSI5ze1_Svg_3KuQbXPyrSk_9G6wiMuK_zU9V5qkO_AAZ0kjsovxkD68xoRQSjv9hNag
 
 ### FIND ALL USERS AS ADMIN
 GET http://localhost:8080/api/user
@@ -62,10 +62,10 @@ GET http://localhost:8080/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImVkaXRvciIsInN1YiI6ImVkaXRvciIsImV4cCI6MTcxODM2MzU2OCwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURJVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dLCJpYXQiOjE3MTgzNjE3Njh9.BZwymyJTwZwIDgMMMXwrPmLXuMtBtk3DtUoEMGXYMsqyLS2wRZQh0MEm_8LSL6c34_oSI3_3B_QhBScDG3gAkw
 
 ### FORGOT PASSWORD
-POST http://localhost:8080/api/user/forgotPassword?email=jean@jean.fr
+POST http://localhost:8080/api/user/forgotPassword?email=paul@paul.fr
 
 ### RESET PASSWORD
-POST http://localhost:8080/api/user/resetPassword?key=2ab28d74-60db-430a-ba3b-dcebfe507cac
+POST http://localhost:8080/api/user/resetPassword?key=1cadc8fb-4bc2-48cb-9685-51edb861aa62
 Content-Type: application/json
 
 {
@@ -76,19 +76,19 @@ Content-Type: application/json
 ### UPDATE PASSWORD (USER CONNECTED)
 PUT http://localhost:8080/api/user/updatePassword
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTg3MDc5NjUsInVzZXJuYW1lIjoiZWRpdG9yIiwic3ViIjoiZWRpdG9yIiwiZXhwIjoxNzE4NzA5NzY1LCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9FRElUT1IifSx7ImF1dGhvcml0eSI6IlJPTEVfQ1VTVE9NRVIifV19.Jxpd6rCMs1PysMBZUHqL5dkBLVGT3NwY43nECksTcooeLi2ZxyeJyBwBw1Kj8ICrTV-TN8nGYNePVHEw40KfYg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTkxNzUzNjAsInVzZXJuYW1lIjoiZWRpdG9yIiwic3ViIjoiZWRpdG9yIiwiZXhwIjoxNzE5MTc3MTYwLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9FRElUT1IifSx7ImF1dGhvcml0eSI6IlJPTEVfQ1VTVE9NRVIifV19.ZIKlPaJNEjsIWRPu4nyxmC9i33Xf4BnnzmBHg0fLqJ2asoZx-g0QlPKl-UCYui43NlgDhRGgeQjquOFx7ZKxbQ
 
 {
   "currentPassword": "editor@pass123",
-  "newPassword": "newPassword123v2"
+  "newPassword": "newPassword123"
 }
 
 ### UPDATE USER DETAILS (USER CONNECTED)
 PUT http://localhost:8080/api/user/updateUserDetails
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3MjEyNDUsInN1YiI6InRpdGkiLCJ1c2VybmFtZSI6InRpdGkiLCJpYXQiOjE3MTg3MTk0NDUsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.O7bqdeZX95-yZPvIjZNTAqA7FlItgXH79zxrvPd2L0wQhS-AsKuSx6wpJ8yF_GXz6youEhXjcpdAisRhDxwWeg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTkxNzU0ODksInVzZXJuYW1lIjoicGF1bCIsInN1YiI6InBhdWwiLCJleHAiOjE3MTkxNzcyODksImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0NVU1RPTUVSIn1dfQ.O4aT7MYiQgaEa5h-pW4VzX3HwkNiTqBlXGwfQRd9ALKStTba2Sn-vfJeCmtb1uSeoODq7BXCcHYFlQbS_JiuHA
 
 {
-  "username": "toto",
-  "email": "toto@toto.fr"
+  "username": "paulo",
+  "email": "paulo@paulo.fr"
 }

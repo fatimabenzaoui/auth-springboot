@@ -63,12 +63,6 @@ public class User extends Audit implements UserDetails {
     @Column(nullable = false)
     private boolean activated = false;
 
-    @Size(max = 36)
-    @Column(length = 36)
-    @JsonIgnore
-    private String passwordResetKey;
-    private Instant passwordResetKeyExpiration;
-
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

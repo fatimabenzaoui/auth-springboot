@@ -81,7 +81,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendPasswordResetEmail(User user) {
         Context context = new Context();
         context.setVariable(USER, user);
-        String content = templateEngine.process("email/passwordResetEmail", context);
+        String content = templateEngine.process("email/resetPasswordEmail", context);
         String subject = "Réinitialisation du mot de passe";
         this.sendEmail(user.getEmail(), subject, content, true);
     }
