@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "titi",
-  "email": "titi@titi.fr",
+  "username": "paul",
+  "email": "paul@paul.fr",
   "password": "123456"
 }
 
@@ -13,11 +13,11 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "884612"
+  "activationKey": "168801"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
-POST http://localhost:8080/api/user/requestNewActivationKey?username=elie
+POST http://localhost:8080/api/user/requestNewActivationKey?username=titi
 
 ### REMOVE NOT ACTIVATED ACCOUNTS (ONLY FOR TEST)
 POST http://localhost:8080/api/user/removeNotActivatedAccounts

@@ -34,7 +34,7 @@ import java.util.Set;
  */
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false) @Builder
-@Table(name="users")
+@Table(name="user")
 public class User extends Audit implements UserDetails {
 
     @Serial
@@ -63,12 +63,6 @@ public class User extends Audit implements UserDetails {
     @Column(nullable = false)
     private boolean activated = false;
 
-    @Size(max = 20)
-    @Column(length = 20)
-    @JsonIgnore
-    private String activationKey;
-    private Instant activationKeyExpiration;
-
     @Size(max = 36)
     @Column(length = 36)
     @JsonIgnore
@@ -78,7 +72,7 @@ public class User extends Audit implements UserDetails {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_authorities",
+            name = "user_authority",
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "authority_label", referencedColumnName = "authority_label") }
     )

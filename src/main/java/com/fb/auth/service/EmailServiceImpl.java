@@ -1,5 +1,6 @@
 package com.fb.auth.service;
 
+import com.fb.auth.entity.AccountActivation;
 import com.fb.auth.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -17,6 +18,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
     private static final String USER = "user";
+    private static final String ACCOUNT_ACTIVATION = "accountActivation";
 
     /**
      * Envoie un email avec le sujet et le contenu spécifiés
@@ -61,9 +63,10 @@ public class EmailServiceImpl implements EmailService {
      * @param user L'utilisateur à qui envoyer la clé d'activation
      */
     @Override
-    public void sendActivationKey(User user) {
+    public void sendActivationKey(User user, AccountActivation accountActivation) {
         Context context = new Context();
         context.setVariable(USER, user);
+        context.setVariable(ACCOUNT_ACTIVATION, accountActivation);
         String content = templateEngine.process("email/activationEmail", context);
         String subject = "Activation de votre compte";
         this.sendEmail(user.getEmail(), subject, content, true);
