@@ -50,7 +50,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAuthenticationDTO.getUsername(), userAuthenticationDTO.getPassword())
         );
-        // vérifie si l'objet Authentication est authentifié
+        // vérifie si l'authentification a réussi
         if (authentication.isAuthenticated()) {
             // si oui, charge les détails de l'utilisateur (UserDetails) à partir du nom d'utilisateur fourni
             UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(userAuthenticationDTO.getUsername());
@@ -68,7 +68,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
      * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé avec l'email donné
      */
     @Override
-    public void forgotPassword(String email) {
+    public void requestResetPassword(String email) {
         // recherche l'utilisateur avec son email
         User user = userRepository.findByEmail(email);
         // si aucun utilisateur n'est trouvé, lance une exception UsernameNotFoundException
@@ -143,8 +143,9 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         }
         // crypte le nouveau mot de passe
         String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
-        // sauvegarde le nouveau mot de passe
+        // assigne le nouveau mot de passe encodé à l'utilisateur courant
         currentUser.setPassword(encodedNewPassword);
+        // sauvegarde le nouveau mot de passe
         userRepository.save(currentUser);
     }
 

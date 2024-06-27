@@ -3,10 +3,12 @@ package com.fb.auth.service;
 import com.fb.auth.constant.Constant;
 import com.fb.auth.dao.AccountActivationRepository;
 import com.fb.auth.dao.AuthorityRepository;
+import com.fb.auth.dao.ProfilePhotoRepository;
 import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.AccountActivation;
 import com.fb.auth.entity.Authority;
+import com.fb.auth.entity.ProfilePhoto;
 import com.fb.auth.entity.User;
 import com.fb.auth.exception.AccountAlreadyActivatedException;
 import com.fb.auth.exception.ActivationKeyExpiredException;
@@ -43,6 +45,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
     private final AccountActivationRepository accountActivationRepository;
+    private final ProfilePhotoRepository profilePhotoRepository;
     private final Random random = new Random();
 
 
@@ -97,8 +100,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         Set<String> authorities = new HashSet<>();
         authorities.add(authority.getAuthorityLabel());
         userDTO.setAuthorities(authorities);
+        // assigne la photo de profil par défaut si aucune n'est spécifiée
+        if (userDTO.getPhotoFileName() == null || userDTO.getPhotoFileName().isEmpty()) {
+            userDTO.setPhotoFileName("default-profile-photo.jpg");
+        }
         // convertit l'objet DTO en entité User
         User user = userMapper.dtoToModel(userDTO);
+        // mappe photoFileName vers ProfilePhoto
+        ProfilePhoto defaultProfilePhoto = profilePhotoRepository.findByFileName(userDTO.getPhotoFileName());
+        user.setProfilePhoto(defaultProfilePhoto);
         // sauvegarde l'utilisateur en base de données
         user = userRepository.save(user);
         // génère la clé d'activation et définit sa date d'expiration
@@ -192,10 +202,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedAccounts() {
+        // crée un objet Instant représentant l'instant actuel moins 3 jours
         Instant date = Instant.now().minus(3, ChronoUnit.DAYS);
+        // récupère la liste des utilisateurs non activés et créés avant la date calculée (il y a 3 jours ou plus)
         List<User> usersToDelete = userRepository.findAllNotActivatedUsersWithActivationKey(date);
+        // pour chaque utilisateur dans la liste des utilisateurs à supprimer
         for (User user : usersToDelete) {
+            // supprime l'enregistrement d'activation du compte de l'utilisateur
             accountActivationRepository.deleteByUser(user);
+            // supprime l'utilisateur
             userRepository.delete(user);
         }
     }

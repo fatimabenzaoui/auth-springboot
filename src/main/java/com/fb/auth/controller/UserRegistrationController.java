@@ -29,7 +29,7 @@ public class UserRegistrationController {
      * @param userDTO Les données de l'utilisateur à enregistrer
      */
     @PostMapping(path="/createAccount")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public void createAccount(@Valid @RequestBody UserDTO userDTO) {
         log.debug("*** REGISTER USER : {}", userDTO);
         userRegistrationService.createAccount(userDTO);

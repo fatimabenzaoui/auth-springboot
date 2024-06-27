@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AuthorityRepository extends JpaRepository<Authority, String> {
-
-    Boolean existsByAuthorityLabel(String authorityLabel);
+    /**
+     * Recherche un rôle avec son libellé
+     *
+     * @param authorityLabel Le libellé du rôle à rechercher
+     * @return Le rôle correspondant au libellé spécifié, ou null si aucun rôle correspondant n'est trouvé
+     */
     Authority findByAuthorityLabel(String authorityLabel);
 }

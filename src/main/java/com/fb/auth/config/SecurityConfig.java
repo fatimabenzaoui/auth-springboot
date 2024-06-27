@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user/authenticate").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/forgotPassword").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/resetPassword").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/profilePhoto/").permitAll()
 
                         // nécessite l'authentification pour toutes les autres ressources
                         .anyRequest().authenticated()

@@ -2,9 +2,7 @@ package com.fb.auth.mapper;
 
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.User;
-import org.mapstruct.InheritInverseConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import java.util.List;
 
 /**
@@ -14,6 +12,7 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "authorities", source = "authorities", qualifiedByName = "grantedAuthoritiesCollectionToStringSet")
+    @Mapping(target = "photoFileName", source = "profilePhoto.fileName")
     UserDTO modelToDto(User user);
     
     List<UserDTO> modelsToDtos(List<User> users);
@@ -21,5 +20,4 @@ public interface UserMapper {
     @InheritInverseConfiguration
     @Mapping(target = "authorities", source = "authorities", qualifiedByName = "stringSetToAuthoritiesSet")
     User dtoToModel(UserDTO userDTO);
-
 }

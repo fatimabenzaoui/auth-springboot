@@ -15,6 +15,7 @@ public class UserDTO {
     private String password;
     private boolean activated = false;
     private Set<String> authorities;
+    private String photoFileName;
 
     private String createdBy;
     private Instant createdDate;

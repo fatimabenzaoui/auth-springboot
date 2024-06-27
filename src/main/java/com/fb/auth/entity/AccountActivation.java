@@ -23,7 +23,7 @@ import java.time.Instant;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false) @Builder
-@Table(name = "account_activation")
+@Table(name = "account_activations")
 public class AccountActivation implements Serializable {
 
     @Serial

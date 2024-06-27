@@ -2,6 +2,7 @@
 
 User "*" -right-> "*" Authority
 User "1" <-down- "1" AccountActivation
+User "*" -left-> "1" ProfilePhoto
 
 abstract class Audit {
     - createdBy: String
@@ -29,11 +30,14 @@ class User {
     - email: String
     - activated: boolean
     - authorities: Set<Authority>
+    - profilePhoto: ProfilePhoto
 
     + createAccount(UserDTO userDTO): void
     + activateAccount(Map<String, String> activation): void
     + requestNewActivationKey(String username): void
     + removeNotActivatedAccounts(): void
+    + securityFilterChain(HttpSecurity httpSecurity): SecurityFilterChain
+    + bCryptPasswordEncoder(): BCryptPasswordEncoder
 }
 
 class Authority {
@@ -45,6 +49,14 @@ class AccountActivation {
     - activationKey: String
     - expirationDate: Instant
     - user: User
+}
+
+class ProfilePhoto {
+    - profilePhotoId: Long
+    - photo: byte[]
+    - fileType: String
+    - fileName: String
+    + save(MultipartFile file): void
 }
 
 @enduml

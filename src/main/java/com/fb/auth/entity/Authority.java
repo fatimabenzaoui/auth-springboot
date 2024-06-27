@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false)
-@Table(name="authority")
+@Table(name="authorities")
 public class Authority implements Serializable {
 
     @Serial

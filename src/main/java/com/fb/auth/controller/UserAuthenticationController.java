@@ -52,8 +52,8 @@ public class UserAuthenticationController {
      * @return Une réponse HTTP indiquant que l'email de réinitialisation a été envoyé
      */
     @PostMapping("/forgotPassword")
-    public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
-        userAuthenticationService.forgotPassword(email);
+    public ResponseEntity<String> requestResetPassword(@RequestParam("email") String email) {
+        userAuthenticationService.requestResetPassword(email);
         return ResponseEntity.ok("Password reset email sent.");
     }
 

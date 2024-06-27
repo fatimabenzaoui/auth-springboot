@@ -3,8 +3,8 @@ POST http://localhost:8080/api/user/createAccount
 Content-Type: application/json
 
 {
-  "username": "titi",
-  "email": "titi@titi.fr",
+  "username": "jean",
+  "email": "jen@jean.fr",
   "password": "123456"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:8080/api/user/activateAccount
 Content-Type: application/json
 
 {
-  "activationKey": "042505"
+  "activationKey": "364346"
 }
 
 ### REQUEST A NEW ACTIVATION KEY
@@ -55,7 +55,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTkxNzUzNTQsInVzZXJuYW1lI
 
 ### FIND ALL USERS AS ADMIN
 GET http://localhost:8080/api/user
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3MDcyNzIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0VESVRPUiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE4NzA1NDcyLCJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4ifQ.492NTkYsN0kEbXFzdRZyvV9Cp4rnTD9vlBoDFgDb-dsyzgSdfG6bowcGgcVLEWul_f0SgjC3GMDlGX-kabESbw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3MTkyNDcyMjEsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0VESVRPUiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9LHsiYXV0aG9yaXR5IjoiUk9MRV9DVVNUT01FUiJ9XSwiaWF0IjoxNzE5MjQ1NDIxfQ.IYJIGBFggDHE76KLgHrQivzeYntEGGXreLkpVI9QWxcWKNiXCTWvlwW9fJozyikeLgvypyRq-FEmEMXPLQovMQ
 
 ### FIND ALL USERS AS EDITOR
 GET http://localhost:8080/api/user
@@ -92,3 +92,19 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MTkxNzU0ODksInVzZXJuYW1lI
   "username": "paulo",
   "email": "paulo@paulo.fr"
 }
+
+### SAVE PROFILE PHOTO WITH POSTMAN
+Sélectionner : POST
+Saisir : http://localhost:8080/api/profilePhoto/
+Cliquer sur : Body
+Cocher : form-data
+Saisir dans le champ Key le nom du paramètre : profilePhoto
+Sortir et re-rentrer dans le champ pour sélectionner File
+Un bouton SelectFile apparaît dans le champ Value
+Charger l'image
+Lorsque la route ne sera plus authorisée, cliquer sur : Authorization
+Choisir Bearer Token dans la liste déroulante No-Auth
+Copier dans le champ du token, le token de l'admin
+Cliquer sur : Send
+
+###

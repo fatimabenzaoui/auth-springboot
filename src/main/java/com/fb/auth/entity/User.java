@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -33,7 +34,7 @@ import java.util.Set;
  */
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false) @Builder
-@Table(name="user")
+@Table(name="users")
 public class User extends Audit implements UserDetails {
 
     @Serial
@@ -65,11 +66,15 @@ public class User extends Audit implements UserDetails {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_authority",
+            name = "users_authorities",
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "authority_label", referencedColumnName = "authority_label") }
     )
     private Set<Authority> authorities = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_photo_id")
+    private ProfilePhoto profilePhoto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

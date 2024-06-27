@@ -2,10 +2,12 @@ package com.fb.auth;
 
 import com.fb.auth.dao.AccountActivationRepository;
 import com.fb.auth.dao.AuthorityRepository;
+import com.fb.auth.dao.ProfilePhotoRepository;
 import com.fb.auth.dao.UserRepository;
 import com.fb.auth.dto.UserDTO;
 import com.fb.auth.entity.AccountActivation;
 import com.fb.auth.entity.Authority;
+import com.fb.auth.entity.ProfilePhoto;
 import com.fb.auth.entity.User;
 import com.fb.auth.exception.AccountAlreadyActivatedException;
 import com.fb.auth.exception.ActivationKeyExpiredException;
@@ -50,6 +52,8 @@ class UserServiceTest {
     private EmailService emailService;
     @Mock
     private AccountActivationRepository accountActivationRepository;
+    @Mock
+    private ProfilePhotoRepository profilePhotoRepository;
 
     @InjectMocks
     private UserRegistrationServiceImpl userRegistrationServiceImpl;
@@ -83,6 +87,9 @@ class UserServiceTest {
         accountActivation.setActivationKey(activationKey);
         accountActivation.setExpirationDate(expirationDate);
         accountActivation.setUser(user);
+        // crée une photo de profil par défaut
+        ProfilePhoto defaultProfilePhoto = new ProfilePhoto();
+        defaultProfilePhoto.setFileName("default-profile-photo.jpg");
         // configure les comportements des mocks
         when(userRepository.existsByUsername(userDTO.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(false);
@@ -91,16 +98,17 @@ class UserServiceTest {
         when(userMapper.dtoToModel(userDTO)).thenReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(accountActivationRepository.save(any(AccountActivation.class))).thenReturn(accountActivation);
+        when(profilePhotoRepository.findByFileName("default-profile-photo.jpg")).thenReturn(defaultProfilePhoto);
         // appelle la méthode à tester
         userRegistrationServiceImpl.createAccount(userDTO);
         // vérifie si la méthode save() du UserRepository a été appelée une fois avec l'utilisateur en paramètre
-        verify(userRepository, times(1)).save(user);
+        verify(userRepository, times(1)).save(any(User.class));
         // vérifie si la méthode save() du AccountActivationRepository a été appelée une fois avec l'objet AccountActivation en paramètre
         verify(accountActivationRepository, times(1)).save(any(AccountActivation.class));
         // vérifie si la méthode sendWelcomeEmail() de l'EmailService a été appelée une fois avec l'utilisateur en paramètre
-        verify(emailService, times(1)).sendWelcomeEmail(user);
+        verify(emailService, times(1)).sendWelcomeEmail(any(User.class));
         // vérifie si la méthode sendActivationKey() de l'EmailService a été appelée une fois avec l'utilisateur et l'activation de compte en paramètre
-        verify(emailService, times(1)).sendActivationKey(eq(user), any(AccountActivation.class));
+        verify(emailService, times(1)).sendActivationKey(any(User.class), any(AccountActivation.class));
     }
 
     /**

@@ -23,7 +23,7 @@ import java.time.Instant;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode(callSuper = false) @Builder
-@Table(name = "reset_password")
+@Table(name = "reset_passwords")
 public class ResetPassword implements Serializable {
 
     @Serial
